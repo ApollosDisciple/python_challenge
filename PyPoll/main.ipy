@@ -1,0 +1,58 @@
+import os
+import csv
+
+election_csv = os.path.join('python_challenge', 'PyPoll', 'Resources', 'election_data.csv')
+
+def votes(candidate_info):
+    individual_candidate = candidate_info[2]
+
+    if individual_candidate in candidates:
+        candidates[individual_candidate] += 1
+    else:
+        candidates[individual_candidate] = 1
+    return candidates
+
+def perc_of_votes():
+    perc_of_votes = (candidates[individual_candidate] / total_votes) * 100
+    return perc_of_votes
+
+with open(election_csv, "r") as csvfile:
+    csvreader = csv.reader(csvfile, delimiter=",")
+    header = next(csvreader)
+
+    total_votes = 0
+    candidates = {}
+    high_percentage = 0
+    winner = ""
+    candidate_information = ""
+
+    for row in csvreader:
+        total_votes += 1
+        candidates = votes(row)
+
+    for individual_candidate in candidates:
+        candidate_percentage = perc_of_votes()
+        if candidate_percentage > high_percentage:
+            high_percentage = candidate_percentage
+            winner = individual_candidate
+        candidate_information += f"{individual_candidate}: {candidate_percentage:.3f}% ({candidates[individual_candidate]})\n"
+
+print(f"Election Results")
+print("------------------------------------------\n")
+print(f"Total Votes: {total_votes}")
+print("------------------------------------------\n")
+print(f"{candidate_information}")
+print("------------------------------------------\n")
+print(f"Winner: {winner}")
+print("------------------------------------------")
+
+output_path = os.path.join('python_challenge', 'PyPoll', 'Analysis')
+
+with open(output_path, "w") as datafile:
+    datafile.write(f"Election Results\n")
+    datafile.write("------------------------------------------\n")
+    datafile.write(f"Total Votes: {total_votes}\n")
+    datafile.write("------------------------------------------\n")
+    datafile.write(f"{candidate_information}\n")
+    datafile.write(f"Winner: {winner}\n")
+    datafile.write("------------------------------------------\n")
